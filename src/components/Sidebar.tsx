@@ -78,7 +78,7 @@ export default function Sidebar() {
               <span className="sm:inline">Open</span>
             </Link>
             <Link
-              href="/in-progress"
+              href="/inProgress"
               className="p-4 hover:bg-gray-200 cursor-pointer flex items-center"
             >
               <FontAwesomeIcon
@@ -96,7 +96,7 @@ export default function Sidebar() {
                 className="mr-4 sm:mr-2 text-green-500"
               />
               <span className="sm:inline">Closed</span>
-            </Link>{" "}
+            </Link>
           </ul>
         </nav>
       </div>

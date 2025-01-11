@@ -1,15 +1,5 @@
+import { Todo, TodosState } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface Todo {
-  id: string;
-  text: string;
-}
-
-interface TodosState {
-  open: Todo[];
-  inProgress: Todo[];
-  closed: Todo[];
-}
 
 const initialState: TodosState = {
   open: [],
