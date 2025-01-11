@@ -9,7 +9,11 @@ export interface Todo {
   assignee: string;
 }
 
-export interface TodosState {
+export interface TodosState extends TodoLists {
+  current: Todo | null;
+}
+
+export interface TodoLists {
   open: Todo[];
   inProgress: Todo[];
   closed: Todo[];

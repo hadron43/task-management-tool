@@ -2,11 +2,12 @@
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/store";
-import { Todo } from "@/types";
+import { Todo, TodoLists } from "@/types";
 import { useEffect, useState } from "react";
+import { next } from "@/lib/features/todosSlice";
 
 interface TableViewProps {
-  type: keyof RootState["todosSlice"];
+  type: keyof TodoLists;
 }
 
 const TableView: React.FC<TableViewProps> = ({ type }) => {
@@ -32,6 +33,8 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTableElement>) => {
     // Implement keyboard navigation and task opening logic here
+    console.log("Key pressed:", event.key);
+    dispatch(next({ list: type }));
   };
 
   return (
