@@ -33,7 +33,7 @@ export default function RootLayout({
         <StoreProvider>
           <div className="relative flex flex-col sm:flex-row min-h-screen bg-white text-black">
             <SideBar />
-            {children}
+            <div className="container mx-auto">{children}</div>
           </div>
         </StoreProvider>
       </body>

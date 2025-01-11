@@ -5,9 +5,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  const menuItems = [
+    { href: "/open", label: "Open", color: "blue" },
+    { href: "/inProgress", label: "In Progress", color: "yellow" },
+    { href: "/closed", label: "Closed", color: "green" },
+  ];
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -67,36 +75,21 @@ export default function Sidebar() {
 
         <nav className={`mt-4`}>
           <ul className="text-gray-800">
-            <Link
-              href="/open"
-              className="p-4 hover:bg-gray-200 cursor-pointer flex items-center"
-            >
-              <FontAwesomeIcon
-                icon={faCircle}
-                className="mr-4 sm:mr-2 text-blue-500"
-              />
-              <span className="sm:inline">Open</span>
-            </Link>
-            <Link
-              href="/inProgress"
-              className="p-4 hover:bg-gray-200 cursor-pointer flex items-center"
-            >
-              <FontAwesomeIcon
-                icon={faCircle}
-                className="mr-4 sm:mr-2 text-yellow-500"
-              />
-              <span className="sm:inline">In Progress</span>
-            </Link>
-            <Link
-              href="/closed"
-              className="p-4 hover:bg-gray-200 cursor-pointer flex items-center"
-            >
-              <FontAwesomeIcon
-                icon={faCircle}
-                className="mr-4 sm:mr-2 text-green-500"
-              />
-              <span className="sm:inline">Closed</span>
-            </Link>
+            {menuItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`p-4 hover:bg-gray-200 cursor-pointer flex items-center ${
+                  pathname === item.href ? "bg-gray-200" : ""
+                }`}
+              >
+                <FontAwesomeIcon
+                  icon={faCircle}
+                  className={`mr-4 sm:mr-2 text-${item.color}-500 h-6 w-6 sm:h-4 sm:w-4`}
+                />
+                <span className="sm:inline">{item.label}</span>
+              </Link>
+            ))}
           </ul>
         </nav>
       </div>
