@@ -12,9 +12,9 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const menuItems = [
-    { href: "/open", label: "Open", color: "blue" },
-    { href: "/inProgress", label: "In Progress", color: "yellow" },
-    { href: "/closed", label: "Closed", color: "green" },
+    { href: "/open", label: "Open", color: "green" },
+    { href: "/inProgress", label: "In Progress", color: "orange" },
+    { href: "/closed", label: "Closed", color: "red" },
   ];
 
   const toggleSidebar = () => {
@@ -76,19 +76,21 @@ export default function Sidebar() {
         <nav className={`mt-4`}>
           <ul className="text-gray-800">
             {menuItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`p-4 hover:bg-gray-200 cursor-pointer flex items-center ${
-                  pathname === item.href ? "bg-gray-200" : ""
-                }`}
-              >
-                <FontAwesomeIcon
-                  icon={faCircle}
-                  className={`mr-4 sm:mr-2 text-${item.color}-500 h-6 w-6 sm:h-4 sm:w-4`}
-                />
-                <span className="sm:inline">{item.label}</span>
-              </Link>
+              <li key={item.label}>
+                <Link
+                  href={item.href}
+                  className={`p-4 hover:bg-gray-100 cursor-pointer flex items-center ${
+                    pathname === item.href ? "bg-gray-200" : ""
+                  }`}
+                >
+                  <FontAwesomeIcon
+                    icon={faCircle}
+                    className={`mr-4 sm:mr-2 h-6 w-6 sm:h-4 sm:w-4`}
+                    style={{ color: item.color, opacity: 0.7 }}
+                  />
+                  <span className="sm:inline">{item.label}</span>
+                </Link>
+              </li>
             ))}
           </ul>
         </nav>
