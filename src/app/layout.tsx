@@ -4,6 +4,7 @@ import "./globals.css";
 
 import SideBar from "@/components/Sidebar";
 import StoreProvider from "@/app/StoreProvider";
+import ToolBar from "@/components/ToolBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,10 @@ export default function RootLayout({
         <StoreProvider>
           <div className="relative flex flex-col sm:flex-row min-h-screen bg-white text-black">
             <SideBar />
-            <div className="container mx-auto">{children}</div>
+            <div className="container mx-auto max-h-screen max-w-screen overflow-auto ">
+              <ToolBar />
+              {children}
+            </div>
           </div>
         </StoreProvider>
       </body>

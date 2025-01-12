@@ -1,5 +1,11 @@
 "use client";
 
-export default function Open() {
-  return <div></div>;
+import TableView from "@/components/TableView";
+
+export default function InProgress() {
+  return (
+    <div>
+      <TableView type="inProgress" />
+    </div>
+  );
 }

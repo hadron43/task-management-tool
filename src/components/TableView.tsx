@@ -3,8 +3,10 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/store";
 import { Todo, TodoLists } from "@/types";
-import { useEffect, useState } from "react";
-import { next } from "@/lib/features/todosSlice";
+import { next, loadMore } from "@/lib/features/todosSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useRef } from "react";
 
 interface TableViewProps {
   type: keyof TodoLists;
@@ -13,23 +15,31 @@ interface TableViewProps {
 const TableView: React.FC<TableViewProps> = ({ type }) => {
   const dispatch = useDispatch();
   const todos = useSelector((state: RootState) => state.todosSlice[type]);
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<"asc" | "desc" | null>(null);
-  const [filteredTodos, setFilteredTodos] = useState<Todo[]>(todos);
+  const hasMore = useSelector(
+    (state: RootState) => state.todosSlice.listStatus[type].hasMore
+  );
+  const search = useSelector((state: RootState) => state.todosSlice.search);
+  const sort = useSelector((state: RootState) => state.todosSlice.sort);
 
-  useEffect(() => {
-    let filtered = todos.filter((todo) =>
+  const filteredTodos = todos
+    .filter((todo: Todo) =>
       todo.text.toLowerCase().includes(search.toLowerCase())
-    );
-    if (sort) {
-      filtered = filtered.sort((a, b) =>
-        sort === "asc"
-          ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-    }
-    setFilteredTodos(filtered);
-  }, [todos, search, sort]);
+    )
+    .sort((a: Todo, b: Todo) => {
+      if (sort === "asc") {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      } else if (sort === "desc") {
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      }
+      return 0;
+    });
+
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const spinnerRef = useRef<HTMLDivElement | null>(null);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTableElement>) => {
     // Implement keyboard navigation and task opening logic here
@@ -37,57 +47,69 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
     dispatch(next({ list: type }));
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          dispatch(loadMore(type));
+        }
+      },
+      { threshold: 1.0 }
+    );
+    observerRef.current = observer;
+
+    if (spinnerRef.current) {
+      observer.observe(spinnerRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [dispatch, hasMore, type, todos]);
+
   return (
     <div className="p-4">
-      <div className="flex justify-between mb-4">
-        <h2 className="text-xl font-bold">{type} Todos</h2>
-        <input
-          type="text"
-          placeholder="Search by name"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border p-2"
-        />
-        <button onClick={() => setSort(sort === "asc" ? "desc" : "asc")}>
-          Sort by Created At ({sort || "none"})
-        </button>
-        <button
-          onClick={() => {
-            setSearch("");
-            setSort(null);
-          }}
-        >
-          Clear
-        </button>
-      </div>
-      <table onKeyDown={handleKeyDown} className="w-full">
-        <thead>
-          <tr>
-            <th>Priority</th>
-            <th>ID</th>
-            <th>Status</th>
-            <th>Labels</th>
-            <th>Name</th>
-            <th>Due Date</th>
-            <th>Created At</th>
-            <th>Assignee</th>
+      <table
+        onKeyDown={handleKeyDown}
+        className="w-full bg-white shadow-sm uppercase tracking-wider"
+      >
+        <thead className="sticky">
+          <tr className="bg-gray-50 text-left text-sm font-medium text-gray-500">
+            <th className="px-6 py-3">Priority</th>
+            <th className="px-6 py-3">ID</th>
+            <th className="px-6 py-3">Status</th>
+            <th className="px-6 py-3">Labels</th>
+            <th className="px-6 py-3">Name</th>
+            <th className="px-6 py-3">Due Date</th>
+            <th className="px-6 py-3">Created At</th>
+            <th className="px-6 py-3">Assignee</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-white divide-y divide-gray-200">
           {filteredTodos.map((todo: Todo) => (
-            <tr key={todo.id} className="border-b">
-              <td>{todo.priority}</td>
-              <td>{todo.id}</td>
-              <td>{todo.status}</td>
-              <td>{todo.labels.join(", ")}</td>
-              <td>{todo.text}</td>
-              <td>{todo.dueDate}</td>
-              <td>{todo.createdAt}</td>
-              <td>{todo.assignee}</td>
+            <tr
+              key={todo.id}
+              className="hover:bg-gray-100 transition-colors duration-200 text-sm text-gray-500"
+            >
+              <td className="px-6 py-4">{todo.priority}</td>
+              <td className="px-6 py-4">{todo.id}</td>
+              <td className="px-6 py-4">{todo.status}</td>
+              <td className="px-6 py-4">{todo.labels.join(", ")}</td>
+              <td className="px-6 py-4 text-gray-900">{todo.text}</td>
+              <td className="px-6 py-4">{todo.dueDate}</td>
+              <td className="px-6 py-4">{todo.createdAt}</td>
+              <td className="px-6 py-4">{todo.assignee}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      {hasMore && (
+        <div className="h-10 flex items-center justify-center" ref={spinnerRef}>
+          <FontAwesomeIcon icon={faSpinner} spin size="2x" className="w-10" />
+        </div>
+      )}
     </div>
   );
 };

@@ -9,8 +9,16 @@ export interface Todo {
   assignee: string;
 }
 
+export interface ListStatus {
+  loaded: boolean;
+  hasMore: boolean;
+}
+
 export interface TodosState extends TodoLists {
+  listStatus: { [key in keyof TodoLists]: ListStatus };
   current: Todo | null;
+  search: string;
+  sort: "asc" | "desc" | null;
 }
 
 export interface TodoLists {
