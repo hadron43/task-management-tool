@@ -72,7 +72,6 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      console.log(`Key pressed: ${event.key}`);
       if (event.key == "Enter" && current) {
         dispatch(setModalOpen(true));
       } else if (event.key == "Escape") {
@@ -118,7 +117,7 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
   }, [current]);
 
   return (
-    <div className="p-4">
+    <div className="p-4 w-full">
       <table className="w-full bg-white shadow-sm tracking-wider">
         <thead className="sticky top-0 ">
           <tr className="bg-gray-200 text-left text-sm font-medium text-gray-500 uppercase">
