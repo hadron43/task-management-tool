@@ -97,16 +97,11 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
       const currentElement = document.getElementById(`todo-${current.id}`);
       if (currentElement) {
         const rect = currentElement.getBoundingClientRect();
-        const isVisible =
-          rect.top >= 0 &&
-          rect.left >= 0 &&
-          rect.bottom <=
-            (window.innerHeight || document.documentElement.clientHeight) &&
-          rect.right <=
-            (window.innerWidth || document.documentElement.clientWidth);
+        const isCompletelyHidden =
+          rect.bottom <= 0 || rect.top >= window.innerHeight;
 
-        if (!isVisible) {
-          window.scrollTo({ top: 0, behavior: "auto" }); // Cancel any ongoing smooth scroll
+        if (isCompletelyHidden) {
+          window.scrollTo({ top: 0, behavior: "auto" });
           currentElement.scrollIntoView({
             behavior: "smooth",
             block: "center",
