@@ -78,8 +78,10 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
       } else if (event.key == "Escape") {
         dispatch(setModalOpen(false));
       } else if (event.key == "ArrowDown") {
+        event.preventDefault();
         dispatch(next({ list: type }));
       } else if (event.key == "ArrowUp") {
+        event.preventDefault();
         dispatch(previous({ list: type }));
       }
     };
@@ -105,6 +107,7 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
             (window.innerWidth || document.documentElement.clientWidth);
 
         if (!isVisible) {
+          window.scrollTo({ top: 0, behavior: "auto" }); // Cancel any ongoing smooth scroll
           currentElement.scrollIntoView({
             behavior: "smooth",
             block: "center",
