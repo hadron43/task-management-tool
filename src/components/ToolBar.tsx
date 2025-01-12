@@ -39,7 +39,7 @@ const ToolBar: React.FC = () => {
   }, [sort]);
 
   return (
-    <div className="sticky top-5 mb-5 z-2 flex flex-col items-center justify-between p-3 bg-gradient-to-r from-white to-gray-300 text-white shadow-lg space-y-3 md:space-y-0 rounded-lg">
+    <div className="sticky top-5 mb-5 z-10 flex flex-col items-center justify-between p-3 bg-gradient-to-r from-white to-gray-300 text-white shadow-lg space-y-3 md:space-y-0 rounded-lg">
       <div className="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-2">
         <div className="flex flex-row items-center space-x-2">
           <input
