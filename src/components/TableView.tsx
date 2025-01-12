@@ -3,13 +3,19 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/store";
 import { Todo, TodoLists } from "@/types";
-import { loadMore, setCurrent, setModalOpen } from "@/lib/features/todosSlice";
+import {
+  loadMore,
+  setCurrent,
+  setModalOpen,
+  next,
+  previous,
+} from "@/lib/features/todosSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef } from "react";
 
 interface TableViewProps {
-  type: keyof TodoLists;
+  readonly type: keyof TodoLists;
 }
 
 const TableView: React.FC<TableViewProps> = ({ type }) => {
@@ -64,6 +70,50 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
     };
   }, [dispatch, hasMore, type, todos]);
 
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      console.log(`Key pressed: ${event.key}`);
+      if (event.key == "Enter" && current) {
+        dispatch(setModalOpen(true));
+      } else if (event.key == "Escape") {
+        dispatch(setModalOpen(false));
+      } else if (event.key == "ArrowDown") {
+        dispatch(next({ list: type }));
+      } else if (event.key == "ArrowUp") {
+        dispatch(previous({ list: type }));
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [dispatch, current, type]);
+
+  useEffect(() => {
+    if (current) {
+      const currentElement = document.getElementById(`todo-${current.id}`);
+      if (currentElement) {
+        const rect = currentElement.getBoundingClientRect();
+        const isVisible =
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <=
+            (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <=
+            (window.innerWidth || document.documentElement.clientWidth);
+
+        if (!isVisible) {
+          currentElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }
+    }
+  }, [current]);
+
   return (
     <div className="p-4">
       <table className="w-full bg-white shadow-sm tracking-wider">
@@ -83,6 +133,7 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
           {filteredTodos.map((todo: Todo) => (
             <tr
               key={todo.id}
+              id={`todo-${todo.id}`}
               className={`transition-colors duration-200 text-sm text-gray-500 ${
                 todo.id === current?.id ? "bg-gray-100" : ""
               }`}

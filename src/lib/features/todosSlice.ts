@@ -57,6 +57,25 @@ const todosSlice = createSlice({
     setCurrent: (state, action: PayloadAction<Todo | null>) => {
       state.current = action.payload;
     },
+    previous: (state, action: PayloadAction<{ list: keyof TodoLists }>) => {
+      const todoIndex = state[action.payload.list].findIndex(
+        (todo) => todo.id === state.current?.id
+      );
+
+      const prevIndex = todoIndex - 1;
+      if (
+        todoIndex !== -1 &&
+        prevIndex >= 0 &&
+        prevIndex < state[action.payload.list].length
+      ) {
+        state.current = state[action.payload.list][prevIndex];
+      } else if (state[action.payload.list].length > 0) {
+        state.current =
+          state[action.payload.list][state[action.payload.list].length - 1];
+      } else {
+        state.current = null;
+      }
+    },
     next: (state, action: PayloadAction<{ list: keyof TodoLists }>) => {
       const todoIndex = state[action.payload.list].findIndex(
         (todo) => todo.id === state.current?.id
@@ -107,6 +126,7 @@ export const {
   moveTodo,
   removeTodo,
   setCurrent,
+  previous,
   next,
   setSearch,
   setSort,
