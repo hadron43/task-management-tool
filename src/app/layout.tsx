@@ -5,6 +5,7 @@ import "./globals.css";
 import SideBar from "@/components/Sidebar";
 import StoreProvider from "@/app/StoreProvider";
 import ToolBar from "@/components/ToolBar";
+import CurrentTodoModal from "@/components/CurrentTodoModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({
               <ToolBar />
               {children}
             </div>
+            <CurrentTodoModal />
           </div>
         </StoreProvider>
       </body>

@@ -3,7 +3,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/store";
 import { Todo, TodoLists } from "@/types";
-import { next, loadMore } from "@/lib/features/todosSlice";
+import { loadMore, setCurrent, setModalOpen } from "@/lib/features/todosSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef } from "react";
@@ -20,6 +20,7 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
   );
   const search = useSelector((state: RootState) => state.todosSlice.search);
   const sort = useSelector((state: RootState) => state.todosSlice.sort);
+  const current = useSelector((state: RootState) => state.todosSlice.current);
 
   const filteredTodos = todos
     .filter((todo: Todo) =>
@@ -40,12 +41,6 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
 
   const observerRef = useRef<IntersectionObserver | null>(null);
   const spinnerRef = useRef<HTMLDivElement | null>(null);
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTableElement>) => {
-    // Implement keyboard navigation and task opening logic here
-    console.log("Key pressed:", event.key);
-    dispatch(next({ list: type }));
-  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -71,12 +66,9 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
 
   return (
     <div className="p-4">
-      <table
-        onKeyDown={handleKeyDown}
-        className="w-full bg-white shadow-sm uppercase tracking-wider"
-      >
+      <table className="w-full bg-white shadow-sm tracking-wider">
         <thead className="sticky">
-          <tr className="bg-gray-50 text-left text-sm font-medium text-gray-500">
+          <tr className="bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase">
             <th className="px-6 py-3">Priority</th>
             <th className="px-6 py-3">ID</th>
             <th className="px-6 py-3">Status</th>
@@ -91,7 +83,11 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
           {filteredTodos.map((todo: Todo) => (
             <tr
               key={todo.id}
-              className="hover:bg-gray-100 transition-colors duration-200 text-sm text-gray-500"
+              className={`transition-colors duration-200 text-sm text-gray-500 ${
+                todo.id === current?.id ? "bg-gray-100" : ""
+              }`}
+              onMouseEnter={() => dispatch(setCurrent(todo))}
+              onClick={() => dispatch(setModalOpen(true))}
             >
               <td className="px-6 py-4">{todo.priority}</td>
               <td className="px-6 py-4">{todo.id}</td>

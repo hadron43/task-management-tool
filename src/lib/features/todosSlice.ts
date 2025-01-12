@@ -16,6 +16,8 @@ const initialState: TodosState = {
   current: null,
   search: "",
   sort: null,
+
+  isModalOpen: false,
 };
 
 const todosSlice = createSlice({
@@ -51,6 +53,9 @@ const todosSlice = createSlice({
       state[action.payload.list] = state[action.payload.list].filter(
         (todo) => todo.id !== action.payload.id
       );
+    },
+    setCurrent: (state, action: PayloadAction<Todo | null>) => {
+      state.current = action.payload;
     },
     next: (state, action: PayloadAction<{ list: keyof TodoLists }>) => {
       const todoIndex = state[action.payload.list].findIndex(
@@ -91,6 +96,9 @@ const todosSlice = createSlice({
     clearSort: (state) => {
       state.sort = initialState.sort;
     },
+    setModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.isModalOpen = action.payload;
+    },
   },
 });
 
@@ -98,11 +106,13 @@ export const {
   addTodo,
   moveTodo,
   removeTodo,
+  setCurrent,
   next,
   setSearch,
   setSort,
   clearSearch,
   clearSort,
   loadMore,
+  setModalOpen,
 } = todosSlice.actions;
 export default todosSlice.reducer;
