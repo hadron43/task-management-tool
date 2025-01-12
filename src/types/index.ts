@@ -21,6 +21,7 @@ export interface TodosState extends TodoLists {
   search: string;
   sort: "asc" | "desc" | null;
   isModalOpen: boolean;
+  isSidebarOpen: boolean;
 }
 
 export interface TodoLists {

@@ -120,8 +120,8 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
   return (
     <div className="p-4">
       <table className="w-full bg-white shadow-sm tracking-wider">
-        <thead className="sticky">
-          <tr className="bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase">
+        <thead className="sticky top-0 ">
+          <tr className="bg-gray-200 text-left text-sm font-medium text-gray-500 uppercase">
             <th className="px-6 py-3">Priority</th>
             <th className="px-6 py-3">ID</th>
             <th className="px-6 py-3">Status</th>

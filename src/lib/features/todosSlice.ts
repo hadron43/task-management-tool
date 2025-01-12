@@ -18,6 +18,7 @@ const initialState: TodosState = {
   sort: null,
 
   isModalOpen: false,
+  isSidebarOpen: false,
 };
 
 const todosSlice = createSlice({
@@ -123,6 +124,9 @@ const todosSlice = createSlice({
     setModalOpen: (state, action: PayloadAction<boolean>) => {
       state.isModalOpen = action.payload;
     },
+    setSidebarOpen: (state, action: PayloadAction<boolean>) => {
+      state.isSidebarOpen = action.payload;
+    },
   },
 });
 
@@ -139,5 +143,6 @@ export const {
   clearSort,
   loadMore,
   setModalOpen,
+  setSidebarOpen,
 } = todosSlice.actions;
 export default todosSlice.reducer;

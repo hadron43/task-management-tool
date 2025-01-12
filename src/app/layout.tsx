@@ -35,9 +35,13 @@ export default function RootLayout({
         <StoreProvider>
           <div className="relative flex flex-col sm:flex-row min-h-screen bg-white text-black">
             <SideBar />
-            <div className="container mx-auto max-h-screen max-w-screen overflow-auto ">
-              <ToolBar />
-              {children}
+            <div className="container flex flex-col gap-2 mx-auto max-h-screen w-screen overflow-auto ">
+              <div className="flex">
+                <ToolBar />
+              </div>
+              <div className="flex flex-1 overflow-auto w-full justify-center">
+                {children}
+              </div>
             </div>
             <CurrentTodoModal />
           </div>

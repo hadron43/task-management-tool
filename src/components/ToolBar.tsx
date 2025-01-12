@@ -8,12 +8,19 @@ import {
   setSort,
   clearSearch,
   clearSort,
+  setSidebarOpen,
 } from "@/lib/features/todosSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
 const ToolBar: React.FC = () => {
   const dispatch = useDispatch();
   const search = useSelector((state: RootState) => state.todosSlice.search);
   const sort = useSelector((state: RootState) => state.todosSlice.sort);
+
+  const showSideBar = () => {
+    dispatch(setSidebarOpen(true));
+  };
 
   useEffect(() => {
     const savedSearch = sessionStorage.getItem("todoSearch");
@@ -39,16 +46,27 @@ const ToolBar: React.FC = () => {
   }, [sort]);
 
   return (
-    <div className="sticky top-5 mb-5 z-10 flex flex-col items-center justify-between p-3 bg-gradient-to-r from-white to-gray-300 text-white shadow-lg space-y-3 md:space-y-0 rounded-lg">
+    <div className="container p-2 sm:p-4 z-10 flex flex-col items-center justify-between p-3 bg-gradient-to-r from-white to-gray-300 text-white shadow-lg space-y-3 md:space-y-0 rounded-lg">
       <div className="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-2">
         <div className="flex flex-row items-center space-x-2">
+          <button
+            className={`p-2 bg-gray-800 text-white rounded-md sm:hidden`}
+            onClick={showSideBar}
+          >
+            <FontAwesomeIcon
+              icon={faAngleRight}
+              className="h-6 w-6 flex m-auto"
+            />
+          </button>
+
           <input
             type="text"
             value={search}
             onChange={(e) => dispatch(setSearch(e.target.value))}
             placeholder="Search..."
-            className="search-bar p-2 border border-gray-300 rounded text-black w-64"
+            className="search-bar p-2 border border-gray-300 rounded text-black"
           />
+
           <button
             onClick={() => dispatch(clearSearch())}
             className="clear-button p-2 border border-gray-300 rounded bg-white text-black hover:bg-gray-50 whitespace-nowrap"

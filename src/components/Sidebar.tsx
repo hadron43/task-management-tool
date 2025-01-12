@@ -1,14 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { setSidebarOpen } from "@/lib/features/todosSlice";
+import { RootState } from "@/lib/store";
 
 export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
+  const isSidebarOpen = useSelector(
+    (state: RootState) => state.todosSlice.isSidebarOpen
+  );
   const pathname = usePathname();
 
   const menuItems = [
@@ -18,23 +23,12 @@ export default function Sidebar() {
   ];
 
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+    dispatch(setSidebarOpen(!isSidebarOpen));
   };
 
   return (
     <>
-      <div className={`p-2 sm:p-0 h-fit flex`}>
-        <button
-          className={`z-50 p-2 bg-gray-800 text-white rounded-md sm:hidden  `}
-          onClick={toggleSidebar}
-        >
-          <FontAwesomeIcon
-            icon={faAngleRight}
-            className="h-6 w-6 flex m-auto"
-          />
-        </button>
-      </div>
-      {isOpen && (
+      {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 sm:hidden"
           onClick={toggleSidebar}
@@ -64,7 +58,7 @@ export default function Sidebar() {
       )}
       <div
         className={`fixed inset-0 sm:relative h-[100dvh] w-64 bg-white shadow-xl transform z-50 border-r ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out sm:translate-x-0`}
       >
         <div className="p-4">
