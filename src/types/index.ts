@@ -7,6 +7,7 @@ export interface Todo {
   dueDate: string;
   createdAt: string;
   assignee: string;
+  comment?: string;
 }
 
 export interface ListStatus {

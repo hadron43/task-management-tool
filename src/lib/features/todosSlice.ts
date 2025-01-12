@@ -36,6 +36,7 @@ const todosSlice = createSlice({
         from: keyof TodoLists;
         to: keyof TodoLists;
         id: string;
+        comment: string;
       }>
     ) => {
       const todoIndex = state[action.payload.from].findIndex(
@@ -43,7 +44,11 @@ const todosSlice = createSlice({
       );
       if (todoIndex !== -1) {
         const [todo] = state[action.payload.from].splice(todoIndex, 1);
-        state[action.payload.to].push(todo);
+        state[action.payload.to].push({
+          ...todo,
+          comment: action.payload.comment,
+          status: action.payload.to.toUpperCase(),
+        });
       }
     },
     removeTodo: (
