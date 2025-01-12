@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store";
 import {
@@ -14,6 +14,29 @@ const ToolBar: React.FC = () => {
   const dispatch = useDispatch();
   const search = useSelector((state: RootState) => state.todosSlice.search);
   const sort = useSelector((state: RootState) => state.todosSlice.sort);
+
+  useEffect(() => {
+    const savedSearch = sessionStorage.getItem("todoSearch");
+    const savedSort = sessionStorage.getItem("todoSort");
+
+    if (savedSearch) {
+      dispatch(setSearch(savedSearch));
+    }
+
+    if (savedSort) {
+      if (savedSort === "asc" || savedSort === "desc") {
+        dispatch(setSort(savedSort));
+      }
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    sessionStorage.setItem("todoSearch", search);
+  }, [search]);
+
+  useEffect(() => {
+    sessionStorage.setItem("todoSort", sort || "");
+  }, [sort]);
 
   return (
     <div className="sticky top-5 mb-5 z-2 flex flex-col items-center justify-between p-3 bg-gradient-to-r from-white to-gray-300 text-white shadow-lg space-y-3 md:space-y-0 rounded-lg">
