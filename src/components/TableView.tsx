@@ -134,7 +134,11 @@ const TableView: React.FC<TableViewProps> = ({ type }) => {
               className={`transition-colors duration-200 text-sm text-gray-500 ${
                 todo.id === current?.id ? "bg-gray-100" : ""
               }`}
-              onMouseEnter={() => dispatch(setCurrent(todo))}
+              onMouseMove={() => {
+                if (todo.id !== current?.id) {
+                  dispatch(setCurrent(todo));
+                }
+              }}
               onClick={() => dispatch(setModalOpen(true))}
             >
               <td className="px-6 py-4">{todo.priority}</td>
